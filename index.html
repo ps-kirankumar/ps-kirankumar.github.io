@@ -1,0 +1,564 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Kiran Kumar's Portfolio</title>
+	<link rel="icon" type="image/x-icon" href="images/f2.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+
+<style>
+
+/*======================================
+//--//-->   ABOUT
+======================================*/
+
+.about-mf .box-shadow-full {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.about-mf .about-img {
+  margin-bottom: 2rem;
+}
+
+.about-mf .about-img img {
+  margin-left: 10px;
+}
+
+.skill-mf .progress {
+  margin: .5rem 0 1.2rem 0;
+  border-radius: 0;
+  height: .7rem;
+}
+
+.skill-mf .progress .progress-bar {
+  height: .7rem;
+  background-color: #ffbd39;
+}
+
+/* Animation styles */
+#typing-animation {
+  position: relative;
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 3s steps(20, end) infinite;
+}
+
+#typing-animation:before {
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #ccc;
+  animation: typing-cursor 0.5s ease-in-out infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes typing-cursor {
+  from {
+    width: 5px;
+  }
+  to {
+    width: 0;
+  }
+}
+
+/* project image zoom effect */
+.zoom-effect {
+  overflow: hidden;
+  transition: transform 0.3s ease-out;
+}
+
+.zoom-effect:hover {
+  transform: scale(1.1);
+}
+
+</style>
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+	    <div class="container">
+			<a class="navbar-brand" href="index.html" style="font-weight: normal;">Kiran Kumar</a>
+	      <button class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav nav ml-auto">
+	          <li class="nav-item"><a href="#home-section" class="nav-link"><span>Home</span></a></li>
+	          <li class="nav-item"><a href="#about-section" class="nav-link"><span>About</span></a></li>
+	          <li class="nav-item"><a href="#experience-section" class="nav-link"><span>Experience</span></a></li>
+			  <li class="nav-item"><a href="#education-section" class="nav-link"><span>Education</span></a></li>
+			  <li class="nav-item"><a href="#skills-section" class="nav-link"><span>Skills</span></a></li>
+	          <li class="nav-item"><a href="#project-section" class="nav-link"><span>Projects</span></a></li>
+	          <li class="nav-item"><a href="#contact-section" class="nav-link"><span>Contact</span></a></li>
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+	  <section id="home-section" class="hero">
+		<div class="home-slider owl-carousel">
+			<div class="slider-item">
+				<div class="overlay"></div>
+				<div class="container">
+					<div class="row d-md-flex no-gutters slider-text align-items-end justify-content-end" data-scrollax-parent="true">
+						<div class="one-third js-fullheight order-md-last img" style="background-image:url(images/f.jpg);">
+							<div class="overlay"></div>
+						</div>
+						<div class="one-forth d-flex align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+							<div class="text">
+								<span class="subheading">Hey there, I am</span>
+								<h1 class="mb-4 mt-3">Kiran Kumar</h1>
+	
+								<!-- Element to contain animated typing -->
+								<span id="typing-animation"></span>
+	
+								<script>
+									// Initialize the typing animation
+									const typingAnimationElement = document.getElementById('typing-animation');
+	
+									// Create an array of typing text
+									const typingTexts = [
+										'Graduate Student   ',
+										'Cloud and Big Data Enthusiast   ',
+										'Snowflake Explorer    ',
+									];
+	
+									// Create a function to display the typing animation for a given text
+									function playTypingAnimation(text) {
+										// Loop through each character and add it to the element
+										for (let i = 0; i < text.length; i++) {
+											setTimeout(() => {
+												typingAnimationElement.textContent += text[i];
+											}, i * 100); // Increase the delay to slow down the typing animation
+										}
+	
+										// Once the animation is complete, reset the text and start over
+										setTimeout(() => {
+											typingAnimationElement.textContent = '';
+											playTypingAnimation(typingTexts[(typingTexts.indexOf(text) + 1) % typingTexts.length]);
+										}, text.length * 100);
+									}
+	
+									// Start the typing animation loop
+									playTypingAnimation(typingTexts[0]);
+								</script>
+	
+								<br>
+								<br>
+								<h2>Data Engineer</h2>
+								<p>
+									<a href="https://github.com/ps-kirankumar" class="logo-link" style="display: inline-block; margin-right: 10px;">
+										<img src="images/github.png" alt="GitHub Logo" style="width: 50px; height: auto;">
+									</a>
+									<a href="https://www.linkedin.com/in/kiran-kumar-p-s/" class="logo-link" style="display: inline-block; margin-right: 10px;">
+										<img src="images/linkedin.png" alt="LinkedIn Logo" style="width: 50px; height: auto;">
+									</a>
+									<a href="mailto:kirankumarpannursivaji@gmail.com" class="logo-link" style="display: inline-block;">
+										<img src="images/mail.png" alt="Email Logo" style="width: 50px; height: auto;">
+									</a>
+									<p>
+										<a href="images/Resume_kiran.pdf" class="btn btn-primary py-3 px-4" target="_blank">View Resume</a>
+									</p>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<section class="ftco-about img ftco-section ftco-no-pb" id="about-section">
+		<div class="container">
+		  <div class="row">
+			<div class="row d-flex align-items-stretch">
+			  <div class="col-md-6 col-lg-5 d-flex">
+				<div class="img-about img d-flex align-items-stretch">
+				  <div class="overlay">
+					<div class="row">
+					  <div class="col-sm-6 col-md-5">
+						<div class="about-img">
+						  <img src="images/f2.png" class="img-fluid rounded b-shadow-a" alt="">
+						</div>
+					  </div>
+					  <div class="col-sm-6 col-md-7">
+						<div class="about-info">
+							<p><span class="title-s"><strong>Name:</strong></span> <span>Kiran Kumar Pannur Sivaji</span></p>
+							<p><span class="title-s"><strong>Job Role:</strong></span> <span>Data Engineer</span></p>
+							<p><span class="title-s"><strong>Domain:</strong></span> <span>Data Engineering, Analytics</span></p>
+							<p><span class="title-s"><strong>Location:</strong></span> <span>Kansas City, MO</span></p>
+							<p><span class="title-s"><strong>Languages:</strong></span> <span>English, Tamil, Telugu, Hindi</span></p>
+						  </div>						  
+					  </div>
+					</div>
+				  </div>
+				</div>
+			  </div>
+	  
+			  <div class="col-md-6 col-lg-7 pl-lg-5 pb-5">
+				<div class="row justify-content-start pb-3">
+				  <div class="col-md-12 heading-section ftco-animate">
+					<h1 class="big">About</h1>
+					<h2 class="mb-4">About Me</h2>
+					<p>I am currently pursuing a master's degree in computer science. I have 2 years of experience working as a Data Engineering Analyst. I am actively looking for internships and full-time positions as a Data Engineer. My career goal is to pursue a role as a Data Engineer, staying updated on the latest tools and technologies. This passion led me to quit my previous job and pursue a master's degree. Along with my studies, I am exploring and deepening my knowledge in various skills through numerous projects.</p>
+				  </div>
+				</div>
+				<div class="counter-wrap ftco-animate d-flex mt-md-3">
+				  <div class="text">
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </section>
+	
+    <section class="ftco-section ftco-no-pb" id="experience-section">
+    	<div class="container">
+    		<div class="row justify-content-center pb-5">
+          <div class="col-md-10 heading-section text-center ftco-animate">
+          </div>
+        </div>
+
+		<div class="row">
+			<h1 class="big-4">Experience</h1>
+			<div class="underline"></div>
+		</div>
+		<br>
+		
+		<div class="row">
+				<div class="col-md-6">
+					<div class="resume-wrap ftco-animate">
+						<span class="date">Jan 2025 - Present</span>
+						<h2>Data Engineer</h2>
+						<span class="position">Squadron Data Inc.</span>
+						<p class="mt-4">
+							<ul>
+								<li>Drive continuous data modernization by assessing legacy system usage (Teradata, SSMS, Oracle, SSIS) and strategically prioritizing high-value datasets for migration to Snowflake, minimizing redundancy and maximizing ROI.</li>
+								<li>Architect and implement enterprise-grade data models and processing logic in Snowflake, including secure views, UDTFs, stored integration with third-party platforms, ensuring performant and secure front-end data delivery with minimal latency.</li>
+								<li>Proactively analyze workload patterns, optimize SQL queries and procedures, and conduct regression testing to improve performance, reduce compute costs, and ensure data accuracy across systems.</li>
+								<li>Own full-cycle solution delivery — from technical discovery to deployment — while leveraging Snowflake’s advanced features (zero-copy cloning, time travel, data masking, dynamic data sharing, and resource monitors) to deliver secure, cost-efficient, and future-ready architectures aligned with client expectations.</li>
+							</ul>							
+						</p>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="resume-wrap ftco-animate">
+						<span class="date">2021 - 2023</span>
+						<h2>Data Engineer</h2>
+						<span class="position">Accenture</span>
+						<p class="mt-4">Worked for client Travelers, a leading provider of property and casualty insurance for auto, home, and business, a Fortune 500 company and one of the largest insurance companies in the United States.
+							<ul>
+								<li>Managed a diverse portfolio of over 150 databases, each with more than 200 database objects, tailored to meet business requirements.</li>
+								<li>Engineered individualized CI/CD data pipelines for 50+ databases, reducing deployment time by 40% and enhancing database agility.</li>
+								<li>Established application-specific warehouses in Snowflake, resulting in a 20% improvement in query performance and a 15% reduction in storage costs.</li>
+								<li>Orchestrated the migration of over 2TB of data from an on-premises Teradata environment to Snowflake, including ETL pipelines, stored procedures, and database objects.</li>
+								<li>Optimized over 250 complex queries, resulting in a 30% reduction in query execution time and significant cost savings.</li>
+								<li>Developed interactive dashboards using Tableau to analyze user query behavior and associated costs, providing actionable insights into resource utilization and cost allocation, leading to a 30% reduction in unnecessary expenses.</li>
+							</ul>							
+						</p>
+					</div>
+				</div>
+			</div>
+		<br>
+		<br>
+		<section class="ftco-section" id="education-section">
+		<div class="row">
+			<h1 class="big-4">Education</h1>
+			<div class="underline"></div>
+		</div>
+		<br>
+		
+			<div class="row">
+    			<div class="col-md-6">
+    				<div class="resume-wrap ftco-animate">
+    					<span class="date">2023 - 2025</span>
+    					<h2>Master of Science in Computer Science</h2>
+    					<span class="position">University of Missouri, Kansas City</span>
+    					<p class="mt-4">GPA: 3.8</p>
+    				</div>
+    			</div>
+
+    			<div class="col-md-6">
+    				<div class="resume-wrap ftco-animate">
+    					<span class="date">2017 - 2021</span>
+    					<h2>Bachelor of Technology in Computer Science and Engineering</h2>
+    					<span class="position">Sri Venkateswara University, India</span>
+    					<p class="mt-4">Grade: First class distinction.</p>
+    				</div>
+				</div>
+    		</div>
+
+			<div class="row justify-content-center mt-5">
+				<div class="col-md-6 text-center ftco-animate">
+					<p><a href="images/transcript.pdf" class="btn btn-primary py-4 px-5" target="_blank">Transcript</a></p>
+				</div>
+			</div>
+
+		<br>
+		<section class="ftco-section ftco-no-pb" id="skills-section">
+		<div class="row">
+		  <h1 class="big-4">Skills</h1>
+		  <div class="underline"></div>
+		</div>
+		<br>
+
+		<div class="row">
+		  <div class="col-md-6">
+			<div class="resume-wrap ftco-animate">
+			  <h3 class="mb-4">Technical Skills</h3>
+			  <ul class="list-unstyled mt-2">
+				<li>Database Management: SQL, Snowflake, Teradata, MongoDB</li>
+				<li>Data Engineering: ETL/ELT, CI/CD pipelines</li>
+				<li>Data Analysis: Databricks, Tableau, PowerBI, QlikView</li>
+				<li>Cloud Computing: AWS, Azure, GCP </li>
+				<li>Programming Languages: Python, Java, C++</li>
+			  </ul>
+			</div>
+		  </div>
+
+		  <div class="col-md-6">
+			<div class="resume-wrap ftco-animate">
+			  <h3 class="mb-4">Certifications</h3>
+			  <ul class="list-unstyled mt-2">
+				<li>AWS Certified Developer Associate</li>
+				<li>AWS Certified Cloud Practitioner</li>
+				<li>Snowflake Workshop Certifications</li>
+			  </ul>
+			</div>
+		  </div>
+		</div>
+
+		<section class="ftco-section" id="project-section">
+		  <div class="container">
+			<div class="row justify-content-center mb-5 pb-5">
+			  <div class="col-md-7 heading-section text-center ftco-animate">
+				<h1 class="big big-2">Projects</h1>
+				<h2 class="mb-4">Projects</h2>
+				<p>Below are the sample Data Analytics projects on SQL, Python, Power BI & ML.</p>
+			  </div>
+			</div>
+			<div class="row d-flex">
+			  <div class="col-md-4 d-flex ftco-animate">
+				<div class="blog-entry justify-content-end">
+				  <a href="https://github.com/ps-kirankumar/NASA_Airflow_project" class="block-20 zoom-effect" style="background-image: url('images/neo.webp');">
+				  </a>
+				  <div class="text mt-3 float-right d-block">
+					<h3 class="heading"><a href="https://github.com/ps-kirankumar/NASA_Airflow_project">Automated NASA Data Pipeline Using Apache Airflow</a></h3>
+					<p>Constructed an automated data pipeline using Apache Airflow to retrieve, process, and store NASA's Near Earth Object data in Amazon S3.</p>
+				  </div>
+				</div>
+			  </div>
+			  <div class="col-md-4 d-flex ftco-animate">
+				<div class="blog-entry justify-content-end">
+				  <a href="https://github.com/ps-kirankumar/Healthcare-Data-Integration-and-Predictive-Analytics-System" class="block-20 zoom-effect" style="background-image: url('images/Healthcare-dashboard.webp');">
+				  </a>
+				  <div class="text mt-3 float-right d-block">
+					<h3 class="heading"><a href="https://github.com/ps-kirankumar/Healthcare-Data-Integration-and-Predictive-Analytics-System">Healthcare Data Integration and Predictive Analytics System</a></h3>
+					<p>Developed a robust data pipeline and predictive analytics system to integrate, process, and visualize healthcare data from multiple sources.</p>
+				  </div>
+				</div>
+			  </div>
+			  <div class="col-md-4 d-flex ftco-animate">
+				<div class="blog-entry">
+				  <a href="https://github.com/ps-kirankumar/Smoothie-Website-Ecommerce" class="block-20 zoom-effect" style="background-image: url('images/230720_PRJ_SpirulinaPromo_WebsiteBanner.jpg');">
+				  </a>
+				  <div class="text mt-3 float-right d-block">
+					<h3 class="heading"><a href="https://github.com/ps-kirankumar/Smoothie-Website-Ecommerce">Smoothie E-Commerce Portal with Streamlit & Snowflake</a></h3>
+					<p>Developed an interactive online website for smoothie shop using Streamlit and Snowflake as part of a Snowflake workshop, enabling seamless order processing and data management.</p>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		<br>
+			<div class="row d-flex justify-content-center">  
+				<div class="col-md-4 d-flex ftco-animate">
+					<div class="blog-entry justify-content-end">
+					<a href="https://github.com/rishabhnmishra/sales_forecasting/tree/main" class="block-20 zoom-effect" style="background-image: url('images/proj_4.jpg');">
+					</a>
+					<div class="text mt-3 float-right d-block">
+					  <h3 class="heading"><a href="https://github.com/rishabhnmishra/sales_forecasting/tree/main">Sales Forecast- Time Series Forecasting</a></h3>
+					  <p>Used multiple machine learning models to forecast sales (retail store) and performed time series analysis.</p>
+					</div>
+				  </div>
+				</div>
+				<div class="col-md-4 d-flex ftco-animate">
+					<div class="blog-entry justify-content-end">
+					<a href="https://github.com/rishabhnmishra/customer_segmentation/blob/main/Customer_Segmentation-final.ipynb" class="block-20 zoom-effect" style="background-image: url('images/proj_5.jpg');">
+					</a>
+					<div class="text mt-3 float-right d-block">
+					  <h3 class="heading"><a href="https://github.com/rishabhnmishra/customer_segmentation/blob/main/Customer_Segmentation-final.ipynb">Customer Segmentation using clustering model</a></h3>
+					  <p>Developed a ML model to give various recommendations of financial products & services on target customer groups.</p>
+					</div>
+				  </div>
+				</div>
+			 </div>
+		  </div>
+		</section>
+
+		<section class="ftco-section ftco-no-pt ftco-no-pb ftco-counter img" id="section-counter">
+			<div class="ftco-section ftco-hireme img margin-top" style="background-image: url(images/pexels-d-ng-nhan-324384-1529881.jpg);">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-md-7 ftco-animate text-center">
+							<div class="content">
+								<h2>More projects on<span> Github</span></h2>
+								<h4>I love transforming raw data into actionable insights and solving complex data challenges.</h4>
+								<br>
+								<p><a href="https://github.com/ps-kirankumar" class="btn btn-primary py-3 px-5">GitHub</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	
+		<section class="ftco-section contact-section ftco-no-pb" id="contact-section">
+			<div class="container">
+			  <div class="row justify-content-center mb-5 pb-3">
+				<div class="col-md-7 heading-section text-center ftco-animate">
+				  <h1 class="big big-2">Contact</h1>
+				  <h2 class="mb-4">Contact Me</h2>
+				  <p>Below are the details to reach out to me!</p>
+				</div>
+			  </div>
+		  
+			  <div class="row d-flex contact-info mb-5 justify-content-center">
+				<div class="col-md-4 d-flex ftco-animate">
+				  <div class="align-self-stretch box p-4 text-center">
+					<div class="icon d-flex align-items-center justify-content-center">
+					  <span class="icon-map-signs"></span>
+					</div>
+					<h3 class="mb-4">Address</h3>
+					<p>Kansas City, MO</p>
+				  </div>
+				</div>
+				<div class="col-md-4 d-flex ftco-animate">
+				  <div class="align-self-stretch box p-4 text-center">
+					<div class="icon d-flex align-items-center justify-content-center">
+					  <span class="icon-phone2"></span>
+					</div>
+					<h3 class="mb-4">Contact Number</h3>
+					<p><a href="tel:+18165221439">+1 816 522 1439</a></p>
+				  </div>
+				</div>
+				<div class="col-md-4 d-flex ftco-animate">
+				  <div class="align-self-stretch box p-4 text-center">
+					<div class="icon d-flex align-items-center justify-content-center">
+					  <span class="icon-paper-plane"></span>
+					</div>
+					<h3 class="mb-4">Email Address</h3>
+					<p><a href="mailto:kirankumarpannursivaji@gmail.com">kirankumarpannursivaji@gmail.com</a></p>
+				  </div>
+				</div>
+			  </div>
+		  
+			  <div class="row justify-content-center">
+				<div class="col-md-7 ftco-animate text-center">
+				  <h2>Have a<span> Question? </span><a href="https://forms.gle/M8xq5spXrJnwFx4W6" class="btn btn-primary py-3 px-5">Click Here</a></h2>
+				</div>
+			  </div>
+
+			  <ul class="ftco-footer-social list-unstyled d-flex justify-content-center align-items-center mb-0">
+			  </ul>
+			</div>
+		  </section>
+		  
+    <footer class="ftco-footer ftco-section">
+		<div class="container">
+		  <div class="row">
+			<div class="col-md-12 text-center">
+			  <p>Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a></p>
+			</div>
+		  </div>
+		</div>
+	  </footer>
+
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>
